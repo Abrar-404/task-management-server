@@ -39,11 +39,45 @@ async function run() {
     const usersCollection = client.db('jobtask').collection('users');
     const taskcollection = client.db('jobtask').collection('task');
 
+    app.get('/addtask', async (req, res) => {
+      const result = await taskcollection.find().toArray();
+      res.send(result);
+    });
+
     app.post('/addtask', async (req, res) => {
-      const taskadd = req.body
-      const result = await taskcollection.insertOne(taskadd);
-      res.send(result)
-})
+      const taskadd = req.body;
+      const data = {
+        title: taskadd.title,
+        description: taskadd.description,
+        date: taskadd.date,
+        priority: taskadd.priority,
+        status: 'todo',
+      };
+      const result = await taskcollection.insertOne(data);
+      res.send(result);
+    });
+
+    app.patch('/status', async (req, res) => {
+      const id = req.query.id;
+      console.log(id);
+      const data = req.body;
+      console.log(req.body);
+      const query = { _id: new ObjectId(id) };
+      const updatedDoc = {
+        $set: {
+          status: data.status,
+        },
+      };
+      const result = await taskcollection.updateOne(query, updatedDoc);
+      res.send(result);
+    });
+
+    app.delete('/addtask/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await taskcollection.deleteOne(query);
+      res.send(result);
+    });
 
     // Send a ping to confirm a successful connection
     await client.db('admin').command({ ping: 1 });
