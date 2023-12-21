@@ -44,6 +44,13 @@ async function run() {
       res.send(result);
     });
 
+    app.get('/task', async (req, res) => {
+      const id = req.query.id;
+      const filter = { _id: new ObjectId(id) };
+      const result = await taskcollection.findOne(filter);
+      res.send(result);
+    });
+
     app.post('/addtask', async (req, res) => {
       const taskadd = req.body;
       const data = {
@@ -72,10 +79,33 @@ async function run() {
       res.send(result);
     });
 
-    app.delete('/addtask/:id', async (req, res) => {
-      const id = req.params.id;
+    app.delete('/delete', async (req, res) => {
+      const id = req.query.id;
+      console.log(id);
       const query = { _id: new ObjectId(id) };
       const result = await taskcollection.deleteOne(query);
+      res.send(result);
+    });
+
+    app.patch('/update', async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) };
+      const data = req.body;
+      const updatedDoc = {
+        $set: {
+          title: data.title,
+          description: data.description,
+          date: data.date,
+          priority: data.priority,
+        },
+      };
+      const result = await taskcollection.updateOne(filter, updatedDoc);
+      res.send(result);
+    });
+
+    app.post('/task', async (req, res) => {
+      const data = req.body;
+      const result = await taskcollection.insertOne(data);
       res.send(result);
     });
 
