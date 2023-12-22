@@ -97,16 +97,17 @@ async function run() {
       res.send(result);
     });
 
-    app.patch('/update', async (req, res) => {
-      const id = req.params.id;
+    app.put('/update', async (req, res) => {
+      const id = req.query.id;
       const filter = { _id: new ObjectId(id) };
       const data = req.body;
       const updatedDoc = {
         $set: {
           title: data.title,
           description: data.description,
-          date: data.date,
           priority: data.priority,
+          deadline: data.deadline,
+          email: data.email,
         },
       };
       const result = await taskcollection.updateOne(filter, updatedDoc);
