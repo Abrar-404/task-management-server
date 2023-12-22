@@ -44,12 +44,24 @@ async function run() {
       res.send(result);
     });
 
-    app.get('/task', async (req, res) => {
-      const id = req.query.id;
-      const filter = { _id: new ObjectId(id) };
-      const result = await taskcollection.findOne(filter);
-      res.send(result);
-    });
+    // app.get('/addtask', async (req, res) => {
+    //   const email = req.query.email;
+    //   const query = { email: email };
+    //   const result = await taskcollection
+    //     .find(query)
+    //     .sort({ priority: 1 })
+    //     .toArray();
+    //   res.send(result);
+    // });
+    // app.get('/tasks', async (req, res) => {
+    //   const email = req.query.email;
+    //   const query = { email: email };
+    //   const result = await taskcollection
+    //     .find(query)
+    //     .sort({ priority: 1 })
+    //     .toArray();
+    //   res.send(result);
+    // });
 
     app.post('/addtask', async (req, res) => {
       const taskadd = req.body;
@@ -66,9 +78,7 @@ async function run() {
 
     app.patch('/status', async (req, res) => {
       const id = req.query.id;
-      console.log(id);
       const data = req.body;
-      console.log(req.body);
       const query = { _id: new ObjectId(id) };
       const updatedDoc = {
         $set: {
